@@ -7,6 +7,7 @@ from agent import (
     agent_answer,
     open_work_handler,
     text_to_sql_handler,
+    find_nearby_accounts_handler,
     Tool,
     register_tool
 )
@@ -59,6 +60,31 @@ register_tool(Tool(
     handler=open_work_handler
 ))
 
+
+# Register the find_nearby_accounts tool
+register_tool(Tool(
+    name="find_nearby_accounts",
+    description="Find accounts near a given location using GPS coordinates. Use this when the user asks about nearby accounts, accounts close to a city or address, or wants to plan a visit route.",
+    parameters={
+        "type": "object",
+        "properties": {
+            "location": {
+                "type": "string",
+                "description": "The user's current location or origin (e.g. 'Des Moines, Iowa')"
+            },
+            "radius_miles": {
+                "type": "number",
+                "description": "Search radius in miles (default: 30)"
+            },
+            "top_n": {
+                "type": "integer",
+                "description": "Maximum number of accounts to return (default: 3)"
+            }
+        },
+        "required": ["location"]
+    },
+    handler=find_nearby_accounts_handler
+))
 
 # Streamlit UI
 st.set_page_config(page_title='Sales Chatbot', layout='centered')
